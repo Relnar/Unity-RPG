@@ -9,20 +9,24 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField]
-        float weaponRange = 2.0f;
-        [SerializeField]
         float timeBetweenAttacks = 1.0f;
         [SerializeField]
-        float weaponDamage = 5.0f;
-
+        Transform rightHandTransform = null;
+        [SerializeField]
+        Transform leftHandTransform = null;
+        [SerializeField]
+        Weapon defaultWeapon = null;
+ 
         Health target;
         Mover mover;
         float timeSinceLastAttack = 100.0f;
+        Weapon currentWeapon = null;
 
         // Start is called before the first frame update
         void Start()
         {
             mover = GetComponent<Mover>();
+            EquipWeapon(defaultWeapon);
         }
 
         // Update is called once per frame
@@ -33,7 +37,7 @@ namespace RPG.Combat
             if (target && mover)
             {
                 // Stop if in weapon's range
-                if (Vector3.Distance(transform.position, target.transform.position) <= weaponRange)
+                if (currentWeapon && Vector3.Distance(transform.position, target.transform.position) <= currentWeapon.GetRange())
                 {
                     mover.Cancel();
                     AttackBehavior();
@@ -59,6 +63,26 @@ namespace RPG.Combat
                 return targetHealth && !targetHealth.isDead;
             }
             return false;
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            if (weapon && weapon != currentWeapon && rightHandTransform)
+            {
+                weapon.Spawn(rightHandTransform, leftHandTransform, GetComponent<Animator>());
+            }
+            currentWeapon = weapon;
+        }
+
+        public void Cancel()
+        {
+            if (TryGetComponent(out Animator animator))
+            {
+                animator.ResetTrigger("attack");
+                animator.SetTrigger("stopAttack");
+            }
+            GetComponent<Mover>().Cancel();
+            target = null;
         }
 
         void AttackBehavior()
@@ -89,9 +113,17 @@ namespace RPG.Combat
         // Animation event
         void Hit()
         {
-            if (target && !target.isDead)
+            if (target && !target.isDead && currentWeapon)
             {
-                target.TakeDamage(weaponDamage);
+                if (currentWeapon.HasProjectile())
+                {
+                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target);
+                }
+                else
+                {
+                    target.TakeDamage(currentWeapon.GetDamage());
+                }
+
                 if (target.isDead)
                 {
                     Cancel();
@@ -99,15 +131,10 @@ namespace RPG.Combat
             }
         }
 
-        public void Cancel()
+        // Animation event
+        void Shoot()
         {
-            if (TryGetComponent(out Animator animator))
-            {
-                animator.ResetTrigger("attack");
-                animator.SetTrigger("stopAttack");
-            }
-            GetComponent<Mover>().Cancel();
-            target = null;
+            Hit();
         }
     }
 }
