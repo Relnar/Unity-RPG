@@ -68,7 +68,7 @@ namespace RPG.Combat
                     Projectile projectileInstance = Instantiate(projectile,
                                                                 handTransform.position,
                                                                 Quaternion.identity);
-                    projectileInstance.SetTarget(target);
+                    projectileInstance.SetTarget(target, weaponDamage);
                 }
             }
         }

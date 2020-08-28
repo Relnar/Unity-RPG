@@ -6,39 +6,49 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-
-}
-
-public class Projectile : MonoBehaviour
-{
-    [SerializeField]
-    float speed = 1.0f;
-
-    Health target = null;
-
-    // Update is called once per frame
-    void Update()
+    public class Projectile : MonoBehaviour
     {
-        if (target)
+        [SerializeField]
+        float speed = 1.0f;
+
+        Health target = null;
+        float damage = 0.0f;
+
+        // Update is called once per frame
+        void Update()
         {
-            transform.LookAt(GetAimLocation());
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            if (target)
+            {
+                transform.LookAt(GetAimLocation());
+                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            }
         }
-    }
 
-    public void SetTarget(Health target)
-    {
-        this.target = target;
-    }
-
-    private Vector3 GetAimLocation()
-    {
-        Vector3 aimLocation = target.transform.position;
-        CapsuleCollider targetCapsule = target.GetComponent<CapsuleCollider>();
-        if (targetCapsule)
+        public void SetTarget(Health target, float damage)
         {
-            aimLocation += Vector3.up * targetCapsule.height * 0.5f;
+            this.target = target;
+            this.damage = damage;
         }
-        return aimLocation;
+
+        private Vector3 GetAimLocation()
+        {
+            Vector3 aimLocation = target.transform.position;
+            CapsuleCollider targetCapsule = target.GetComponent<CapsuleCollider>();
+            if (targetCapsule)
+            {
+                aimLocation += Vector3.up * targetCapsule.height * 0.5f;
+            }
+            return aimLocation;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            Health collidingTarget = other.GetComponent<Health>();
+            if (collidingTarget == target)
+            {
+                target.TakeDamage(damage);
+                Destroy(gameObject);
+            }
+        }
     }
 }
