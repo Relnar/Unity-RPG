@@ -32,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7542085658910549327}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -143,9 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d257b33ac008e464cbc62fb76bab61b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponRange: 2
   timeBetweenAttacks: 1
-  weaponDamage: 5
+  rightHandTransform: {fileID: 0}
+  leftHandTransform: {fileID: 0}
+  defaultWeapon: {fileID: 0}
 --- !u!114 &7237492016948490486
 MonoBehaviour:
   m_ObjectHideFlags: 0
