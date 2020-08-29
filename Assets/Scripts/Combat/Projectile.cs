@@ -13,14 +13,25 @@ namespace RPG.Combat
 
         Health target = null;
         float damage = 0.0f;
+        BoxCollider projectileCollider = null;
+
+        private void Start()
+        {
+            projectileCollider = GetComponent<BoxCollider>();
+        }
 
         // Update is called once per frame
         void Update()
         {
             if (target)
             {
-                transform.LookAt(GetAimLocation());
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
+
+                // Destroy if outside the frustum
+                if (!IsVisibleFromMainCamera())
+                {
+                    Destroy(gameObject);
+                }
             }
         }
 
@@ -28,6 +39,18 @@ namespace RPG.Combat
         {
             this.target = target;
             this.damage = damage;
+
+            // Change the transform in the target direction
+            if (target)
+            {
+                transform.LookAt(GetAimLocation());
+            }
+        }
+
+        bool IsVisibleFromMainCamera()
+        {
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            return GeometryUtility.TestPlanesAABB(planes, projectileCollider.bounds);
         }
 
         private Vector3 GetAimLocation()
@@ -36,6 +59,7 @@ namespace RPG.Combat
             CapsuleCollider targetCapsule = target.GetComponent<CapsuleCollider>();
             if (targetCapsule)
             {
+                // Adjust the aim location to be at the target mid height
                 aimLocation += Vector3.up * targetCapsule.height * 0.5f;
             }
             return aimLocation;
