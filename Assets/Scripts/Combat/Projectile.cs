@@ -11,6 +11,9 @@ namespace RPG.Combat
         [SerializeField]
         float speed = 1.0f;
 
+        [SerializeField]
+        bool isHoming = false;
+
         Health target = null;
         float damage = 0.0f;
         BoxCollider projectileCollider = null;
@@ -19,12 +22,16 @@ namespace RPG.Combat
         {
             projectileCollider = GetComponent<BoxCollider>();
         }
-
+        
         // Update is called once per frame
         void Update()
         {
             if (target)
             {
+                if (isHoming && !target.isDead)
+                {
+                    transform.LookAt(GetAimLocation());
+                }
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
                 // Destroy if outside the frustum
@@ -65,12 +72,25 @@ namespace RPG.Combat
             return aimLocation;
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision)
         {
-            Health collidingTarget = other.GetComponent<Health>();
-            if (collidingTarget == target)
+            // Friendly fire
+            Health collidingTarget = collision.collider.GetComponent<Health>();
+            if (collidingTarget)
             {
-                target.TakeDamage(damage);
+                if (!collidingTarget.isDead)
+                {
+                    collidingTarget.TakeDamage(damage);
+                    if (collidingTarget.isDead)
+                    {
+                        // Disable collider, so that the next projectile launched will continue through
+                        collision.collider.enabled = false;
+                    }
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
                 Destroy(gameObject);
             }
         }
