@@ -117,7 +117,7 @@ namespace RPG.Combat
             {
                 if (currentWeapon.HasProjectile())
                 {
-                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target);
+                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, GetComponent<CapsuleCollider>());
                 }
                 else
                 {

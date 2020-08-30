@@ -42,7 +42,7 @@ namespace RPG.Combat
             }
         }
 
-        public void SetTarget(Health target, float damage)
+        public void SetTarget(Health target, float damage, CapsuleCollider capsuleCollider)
         {
             this.target = target;
             this.damage = damage;
@@ -51,6 +51,10 @@ namespace RPG.Combat
             if (target)
             {
                 transform.LookAt(GetAimLocation());
+            }
+            if (capsuleCollider)
+            {
+                Physics.IgnoreCollision(GetComponent<BoxCollider>(), capsuleCollider);
             }
         }
 
