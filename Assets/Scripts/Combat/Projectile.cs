@@ -14,6 +14,9 @@ namespace RPG.Combat
         [SerializeField]
         bool isHoming = false;
 
+        [SerializeField]
+        GameObject hitEffect = null;
+
         Health target = null;
         float damage = 0.0f;
         BoxCollider projectileCollider = null;
@@ -85,6 +88,10 @@ namespace RPG.Combat
                 if (!collidingTarget.isDead)
                 {
                     collidingTarget.TakeDamage(damage);
+                    if (hitEffect)
+                    {
+                        Instantiate(hitEffect, GetAimLocation(), transform.rotation);
+                    }
                     if (collidingTarget.isDead)
                     {
                         // Disable collider, so that the next projectile launched will continue through
