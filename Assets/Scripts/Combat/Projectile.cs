@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using RPG.Core;
+﻿using RPG.Core;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -16,6 +13,15 @@ namespace RPG.Combat
 
         [SerializeField]
         GameObject hitEffect = null;
+
+        [SerializeField]
+        float maxLifeTime = 10.0f;
+
+        [SerializeField]
+        GameObject[] destroyOnHit = null;
+
+        [SerializeField]
+        float lifeAfterImpact = 2.0f;
 
         Health target = null;
         float damage = 0.0f;
@@ -59,6 +65,9 @@ namespace RPG.Combat
             {
                 Physics.IgnoreCollision(GetComponent<BoxCollider>(), capsuleCollider);
             }
+
+            // Destroy projectile if flying for more than max lifetime
+            Destroy(gameObject, maxLifeTime);
         }
 
         bool IsVisibleFromMainCamera()
@@ -87,6 +96,7 @@ namespace RPG.Combat
             {
                 if (!collidingTarget.isDead)
                 {
+                    speed = 0.0f;
                     collidingTarget.TakeDamage(damage);
                     if (hitEffect)
                     {
@@ -97,7 +107,13 @@ namespace RPG.Combat
                         // Disable collider, so that the next projectile launched will continue through
                         collision.collider.enabled = false;
                     }
-                    Destroy(gameObject);
+
+                    foreach (var toDestroy in destroyOnHit)
+                    {
+                        Destroy(toDestroy);
+                    }
+
+                    Destroy(gameObject, lifeAfterImpact);
                 }
             }
             else
