@@ -27,6 +27,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 464197169864911197, guid: f3e1164c6a4d24a24b3d6afd302ce181,
+        type: 3}
+      propertyPath: characterClass
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3386300996182146836, guid: f3e1164c6a4d24a24b3d6afd302ce181,
         type: 3}
       propertyPath: m_IsKinematic
