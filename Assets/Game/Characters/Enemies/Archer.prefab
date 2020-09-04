@@ -18,6 +18,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e49185a0c25dd4641a8c6e63e0ba4dfe,
         type: 2}
+    - target: {fileID: 2262880921716565939, guid: 2e01be32d48424ef7b33742cc7496d3a,
+        type: 3}
+      propertyPath: defaultWeaponName
+      value: EnemyBow
+      objectReference: {fileID: 0}
     - target: {fileID: 3234829424967184006, guid: 2e01be32d48424ef7b33742cc7496d3a,
         type: 3}
       propertyPath: m_Name

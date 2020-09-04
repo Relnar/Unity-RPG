@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using RPG.Core;
 using RPG.Movement;
+using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction
+    public class Fighter : MonoBehaviour, IAction, ISaveable
     {
-        [SerializeField]
-        float timeBetweenAttacks = 1.0f;
-        [SerializeField]
-        Transform rightHandTransform = null;
-        [SerializeField]
-        Transform leftHandTransform = null;
-        [SerializeField]
-        Weapon defaultWeapon = null;
+        [SerializeField] float timeBetweenAttacks = 1.0f;
+        [SerializeField] Transform rightHandTransform = null;
+        [SerializeField] Transform leftHandTransform = null;
+        [SerializeField] Weapon defaultWeapon = null;
  
         Health target;
         Mover mover;
@@ -26,7 +23,11 @@ namespace RPG.Combat
         void Start()
         {
             mover = GetComponent<Mover>();
-            EquipWeapon(defaultWeapon);
+
+            if (currentWeapon == null)
+            {
+                EquipWeapon(defaultWeapon);
+            }
         }
 
         // Update is called once per frame
@@ -135,6 +136,20 @@ namespace RPG.Combat
         void Shoot()
         {
             Hit();
+        }
+
+        public object CaptureState()
+        {
+            return currentWeapon.name;
+        }
+
+        public void RestoreState(object state)
+        {
+            Weapon weapon = Resources.Load<Weapon>(state as string);
+            if (weapon)
+            {
+                EquipWeapon(weapon);
+            }
         }
     }
 }
