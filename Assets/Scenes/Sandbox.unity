@@ -885,7 +885,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409995473}
-  m_LocalRotation: {x: 0.097629786, y: 0.772419, z: -0.12252244, w: 0.6154882}
+  m_LocalRotation: {x: 0.09762978, y: 0.77241904, z: -0.122522466, w: 0.6154881}
   m_LocalPosition: {x: -180.15, y: 171.72, z: -0.059999943}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3624,6 +3624,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2059510561}
     m_Modifications:
+    - target: {fileID: 2157325202837232483, guid: d8c545a60be4c42fbb80ff74c002512f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 8.400024
+      objectReference: {fileID: 0}
+    - target: {fileID: 2157325202837232483, guid: d8c545a60be4c42fbb80ff74c002512f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -27.599976
+      objectReference: {fileID: 0}
     - target: {fileID: 2926543170607928639, guid: d8c545a60be4c42fbb80ff74c002512f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3648,6 +3658,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 7729284632431639357, guid: d8c545a60be4c42fbb80ff74c002512f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 8.400024
+      objectReference: {fileID: 0}
+    - target: {fileID: 7729284632431639357, guid: d8c545a60be4c42fbb80ff74c002512f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -27.599976
       objectReference: {fileID: 0}
     - target: {fileID: 8158966491199079249, guid: d8c545a60be4c42fbb80ff74c002512f,
         type: 3}

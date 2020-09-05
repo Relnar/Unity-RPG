@@ -74,6 +74,11 @@ namespace RPG.Combat
             currentWeapon = weapon;
         }
 
+        public Health GetTarget()
+        {
+            return target;
+        }
+
         public void Cancel()
         {
             if (TryGetComponent(out Animator animator))
