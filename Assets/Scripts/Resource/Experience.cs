@@ -1,16 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Resource
 {
-    public class Experience : MonoBehaviour
+    public class Experience : MonoBehaviour, ISaveable
     {
         [SerializeField] int experiencePoints = 0;
 
         public void GainExperience(int experience)
         {
             experiencePoints += experience;
+        }
+
+        public object CaptureState()
+        {
+            return experiencePoints;
+        }
+
+        public void RestoreState(object state)
+        {
+            if (state is int)
+            {
+                experiencePoints = (int)state;
+            }
         }
     }
 }

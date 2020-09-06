@@ -14,6 +14,7 @@ namespace RPG.Combat
         [SerializeField] Weapon defaultWeapon = null;
  
         Health target;
+        Health health;
         Mover mover;
         float timeSinceLastAttack = 100.0f;
         Weapon currentWeapon = null;
@@ -22,6 +23,7 @@ namespace RPG.Combat
         void Start()
         {
             mover = GetComponent<Mover>();
+            health = GetComponent<Health>();
 
             if (currentWeapon == null)
             {
@@ -32,6 +34,11 @@ namespace RPG.Combat
         // Update is called once per frame
         void Update()
         {
+            if (health.isDead)
+            {
+                return;
+            }
+
             timeSinceLastAttack += Time.deltaTime;
 
             if (target && mover)
