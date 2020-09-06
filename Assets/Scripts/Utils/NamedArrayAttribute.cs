@@ -5,9 +5,11 @@ namespace RPG.Utils
     public class NamedArrayAttribute : PropertyAttribute
     {
         public string name;
-        public NamedArrayAttribute(string name)
+        public int startIndex;
+        public NamedArrayAttribute(string name, int startIndex = 0)
         {
             this.name = name;
+            this.startIndex = startIndex;
         }
     }
 }

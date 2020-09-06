@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RPG.Utils
 {
     [CustomPropertyDrawer(typeof(NamedArrayAttribute))]
-    public class DrawerNamedArray : PropertyDrawer
+    public class NamedArrayDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -21,8 +21,7 @@ namespace RPG.Utils
             string[] parts = label.text.Split(' ');
             if (parts.Length > 1 && Int32.TryParse(parts[1], out int j))
             {
-                j++;
-                label.text = name.name + " " + j;
+                label.text = name.name + " " + (j + name.startIndex);
             }
 
             // Draw field

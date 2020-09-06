@@ -13,7 +13,7 @@ namespace RPG.Stats
         [System.Serializable]
         class ProgressionCharacterClass
         {
-            [NamedArray("Level")]
+            [NamedArray("Level", 1)]
             public ProgressionStat[] levels = new ProgressionStat[1];
         }
 
