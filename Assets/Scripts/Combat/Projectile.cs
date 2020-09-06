@@ -24,6 +24,7 @@ namespace RPG.Combat
         float lifeAfterImpact = 2.0f;
 
         Health target = null;
+        GameObject instigator = null;
         float damage = 0.0f;
         BoxCollider projectileCollider = null;
 
@@ -51,10 +52,11 @@ namespace RPG.Combat
             }
         }
 
-        public void SetTarget(Health target, float damage, CapsuleCollider capsuleCollider)
+        public void SetTarget(Health target, GameObject instigator, float damage, CapsuleCollider capsuleCollider)
         {
             this.target = target;
             this.damage = damage;
+            this.instigator = instigator;
 
             // Change the transform in the target direction
             if (target)
@@ -97,7 +99,7 @@ namespace RPG.Combat
                 if (!collidingTarget.isDead)
                 {
                     speed = 0.0f;
-                    collidingTarget.TakeDamage(damage);
+                    collidingTarget.TakeDamage(instigator, damage);
                     if (hitEffect)
                     {
                         Instantiate(hitEffect, GetAimLocation(), transform.rotation);

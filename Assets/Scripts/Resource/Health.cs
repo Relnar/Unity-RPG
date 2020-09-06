@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using RPG.Core;
 using RPG.Saving;
@@ -21,7 +22,7 @@ namespace RPG.Resource
             healthPoints = GetComponent<BaseStats>().GetHealth();
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(GameObject instigator, float damage)
         {
             if (!isDead)
             {
@@ -29,8 +30,8 @@ namespace RPG.Resource
                 if (isDead)
                 {
                     Die();
+                    AwardExperience(instigator);
                 }
-
             }
         }
 
@@ -38,6 +39,15 @@ namespace RPG.Resource
         {
             GetComponent<Animator>().SetTrigger("die");
             GetComponent<ActionScheduler>().CancelCurrentAction();
+        }
+
+        private void AwardExperience(GameObject instigator)
+        {
+            Experience experience = instigator.GetComponent<Experience>();
+            if (experience)
+            {
+                experience.GainExperience(GetComponent<BaseStats>().GetExperienceReward());
+            }
         }
 
         public object CaptureState()

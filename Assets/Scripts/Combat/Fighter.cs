@@ -122,11 +122,11 @@ namespace RPG.Combat
             {
                 if (currentWeapon.HasProjectile())
                 {
-                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, GetComponent<CapsuleCollider>());
+                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, GetComponent<CapsuleCollider>());
                 }
                 else
                 {
-                    target.TakeDamage(currentWeapon.GetDamage());
+                    target.TakeDamage(gameObject, currentWeapon.GetDamage());
                 }
 
                 if (target.isDead)
