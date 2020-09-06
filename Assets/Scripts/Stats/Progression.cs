@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -7,29 +7,32 @@ namespace RPG.Stats
     [CreateAssetMenu(fileName = "Progression", menuName = "Stats/New Progression", order = 0)]
     public class Progression : ScriptableObject
     {
-        [SerializeField] ProgressionCharacterClass[] characterClass = null;
+        [EnumNamedArray(typeof(CharacterClass))]
+        [SerializeField] ProgressionCharacterClass[] characterClass = new ProgressionCharacterClass[Enum.GetValues(typeof(CharacterClass)).Length];
 
         [System.Serializable]
         class ProgressionCharacterClass
         {
-            [SerializeField] CharacterClass characterClass;
-            [SerializeField] public ProgressionCharacterClassLevel[] levels = null;
+            [NamedArray("Level")]
+            public ProgressionStat[] levels = new ProgressionStat[1];
         }
 
         [System.Serializable]
-        class ProgressionCharacterClassLevel
+        class ProgressionStat
         {
-            [SerializeField] public float health = 1.0f;
-            [SerializeField] public float damage = 1.0f;
+            [EnumNamedArray(typeof(Stats))]
+            public float[] stats = new float[Enum.GetValues(typeof(Stats)).Length];
         }
 
-        public float GetHealth(CharacterClass character, int level)
+        public float GetStat(Stats stat, CharacterClass character, int level)
         {
             int characterIndex = (int)character;
+            int statIndex = (int)stat;
             if (characterIndex < characterClass.Length &&
-                level > 0 && level <= characterClass[characterIndex].levels.Length)
+                level > 0 && level <= characterClass[characterIndex].levels.Length &&
+                statIndex < characterClass[characterIndex].levels[level - 1].stats.Length)
             {
-                return characterClass[characterIndex].levels[level - 1].health;
+                return characterClass[characterIndex].levels[level - 1].stats[statIndex];
             }
             return 0.0f;
         }

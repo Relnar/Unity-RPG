@@ -14,12 +14,15 @@ namespace RPG.Resource
         [SerializeField]
         float healthPoints = 100.0f;
 
+        BaseStats baseStats = null;
+
         public float CurrentHealth { get => healthPoints; }
         public bool isDead { get => healthPoints <= 0.0f; }
 
         private void Start()
         {
-            healthPoints = GetComponent<BaseStats>().GetHealth();
+            baseStats = GetComponent<BaseStats>();
+            healthPoints = baseStats.GetStat(Stats.Stats.Health);
         }
 
         public void TakeDamage(GameObject instigator, float damage)
@@ -46,7 +49,7 @@ namespace RPG.Resource
             Experience experience = instigator.GetComponent<Experience>();
             if (experience)
             {
-                experience.GainExperience(GetComponent<BaseStats>().GetExperienceReward());
+                experience.GainExperience((int)baseStats.GetStat(Stats.Stats.ExperienceReward));
             }
         }
 
@@ -70,7 +73,7 @@ namespace RPG.Resource
 
         public float GetPercentage()
         {
-            return 100.0f * healthPoints / GetComponent<BaseStats>().GetHealth();
+            return 100.0f * healthPoints / baseStats.GetStat(Stats.Stats.Health);
         }
     }
 }
