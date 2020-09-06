@@ -7,6 +7,11 @@ namespace RPG.Resource
     {
         [SerializeField] int experiencePoints = 0;
 
+        public int GetExperience()
+        {
+            return experiencePoints;
+        }
+
         public void GainExperience(int experience)
         {
             experiencePoints += experience;
