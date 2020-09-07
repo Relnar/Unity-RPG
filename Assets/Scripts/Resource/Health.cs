@@ -50,6 +50,10 @@ namespace RPG.Resource
             if (experience)
             {
                 experience.GainExperience((int)baseStats.GetStat(Stats.Stats.ExperienceReward));
+                if (instigator.CompareTag("Player"))
+                {
+                    instigator.GetComponent<BaseStats>().GetLevel();
+                }
             }
         }
 

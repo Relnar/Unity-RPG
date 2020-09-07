@@ -3,6 +3,7 @@
     public enum Stats
     {
         Health,
-        ExperienceReward
+        ExperienceReward,
+        XPtoLevelUp,
     }
 }
