@@ -4,21 +4,21 @@ using UnityEngine.UI;
 
 namespace RPG.Stats
 {
-    public class ExperienceDisplay : MonoBehaviour
+    public class LevelDisplay : MonoBehaviour
     {
-        Experience experience;
+        BaseStats baseStats;
         Text textDisplay = null;
 
         private void Awake()
         {
-            experience = GameObject.FindWithTag("Player").GetComponent<Experience>();
+            baseStats = GameObject.FindWithTag("Player").GetComponent<BaseStats>();
             textDisplay = GetComponent<Text>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            textDisplay.text = String.Format("{0}", experience.GetExperience());
+            textDisplay.text = String.Format("{0}", baseStats.GetLevel());
         }
     }
 }
