@@ -14,8 +14,8 @@ namespace RPG.Stats
 
         private void Start()
         {
-            currentLevel = CalculateLevel();
             experience = GetComponent<Experience>();
+            currentLevel = CalculateLevel();
             if (experience)
             {
                 experience.OnExperienceGained += UpdateLevel;
