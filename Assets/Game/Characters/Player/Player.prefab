@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &111748033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 831524901255013193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68b1e99c4728d4bfb87db8bf0d881661, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-5206485668414006897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,6 +13,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   experiencePoints: 0
+--- !u!114 &111748033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831524901255013193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b1e99c4728d4bfb87db8bf0d881661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7142979005918742022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45,6 +45,12 @@ PrefabInstance:
       propertyPath: characterClass
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 464197169864911197, guid: f3e1164c6a4d24a24b3d6afd302ce181,
+        type: 3}
+      propertyPath: levelUpEffect
+      value: 
+      objectReference: {fileID: 6459555296645892070, guid: 59dc66c3745b0441781dfe6f9a08ba30,
+        type: 3}
     - target: {fileID: 3386300996182146836, guid: f3e1164c6a4d24a24b3d6afd302ce181,
         type: 3}
       propertyPath: m_IsKinematic

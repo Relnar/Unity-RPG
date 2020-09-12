@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RPG.Stats
 {
@@ -8,9 +9,12 @@ namespace RPG.Stats
         [SerializeField] int startingLevel = 1;
         [SerializeField] CharacterClass characterClass = CharacterClass.Grunt;
         [SerializeField] Progression progression = null;
+        [SerializeField] GameObject levelUpEffect = null;
 
         Experience experience;
         int currentLevel = 0;
+
+        public event Action OnLevelUp;
 
         private void Start()
         {
@@ -20,6 +24,7 @@ namespace RPG.Stats
             {
                 experience.OnExperienceGained += UpdateLevel;
             }
+            this.OnLevelUp += LevelUpEffect;
         }
 
         private void UpdateLevel()
@@ -28,12 +33,26 @@ namespace RPG.Stats
             if (newLevel > currentLevel)
             {
                 currentLevel = newLevel;
+                OnLevelUp();
             }
+        }
+
+        private void LevelUpEffect()
+        {
+            if (levelUpEffect)
+            {
+                GameObject.Instantiate(levelUpEffect, transform);
+            }
+        }
+
+        public float GetStat(Stats stat, int level)
+        {
+            return progression ? progression.GetStat(stat, characterClass, startingLevel) : 0.0f;
         }
 
         public float GetStat(Stats stat)
         {
-            return progression ? progression.GetStat(stat, characterClass, startingLevel) : 0.0f;
+            return GetStat(stat, startingLevel);
         }
 
         public int GetLevel()
@@ -47,17 +66,21 @@ namespace RPG.Stats
 
         public int CalculateLevel()
         {
-            if (experience && progression)
+            if (currentLevel < 1)
+            {
+                currentLevel = 1;
+            }
+            else if (experience && progression)
             {
                 var currentXP = experience.GetExperience();
                 var xpToLevelUp = GetStat(Stats.XPtoLevelUp);
-                if (currentXP >= xpToLevelUp && startingLevel < 99)
+                if (currentXP >= xpToLevelUp && currentLevel < 99)
                 {
-                    startingLevel++;
+                    currentLevel++;
                 }
             }
 
-            return startingLevel;
+            return currentLevel;
         }
     }
 }

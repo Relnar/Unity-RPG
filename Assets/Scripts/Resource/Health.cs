@@ -11,28 +11,26 @@ namespace RPG.Resource
 {
     public class Health : MonoBehaviour, ISaveable
     {
-        [SerializeField]
-        float healthPoints = -1.0f;
-
         BaseStats baseStats = null;
 
-        public float CurrentHealth { get => healthPoints; }
-        public bool isDead { get => healthPoints <= 0.0f; }
+        public float CurrentHealth { get; private set; } = -1.0f;
+        public bool isDead { get => CurrentHealth <= 0.0f; }
 
         private void Start()
         {
             baseStats = GetComponent<BaseStats>();
-            if (healthPoints < -1.0f)
+            if (CurrentHealth < 0.0f)
             {
-                healthPoints = baseStats.GetStat(Stats.Stats.Health);
+                CurrentHealth = baseStats.GetStat(Stats.Stats.Health);
             }
+            baseStats.OnLevelUp += UpdateHealthOnLevelUp;
         }
 
         public void TakeDamage(GameObject instigator, float damage)
         {
             if (!isDead)
             {
-                healthPoints = Mathf.Max(healthPoints - damage, 0.0f);
+                CurrentHealth = Mathf.Max(CurrentHealth - damage, 0.0f);
                 if (isDead)
                 {
                     Die();
@@ -58,14 +56,14 @@ namespace RPG.Resource
 
         public object CaptureState()
         {
-            return healthPoints;
+            return CurrentHealth;
         }
 
         public void RestoreState(object state)
         {
             if (state is float)
             {
-                healthPoints = (float)state;
+                CurrentHealth = (float)state;
                 if (isDead)
                 {
                     Die();
@@ -75,7 +73,16 @@ namespace RPG.Resource
 
         public float GetPercentage()
         {
-            return 100.0f * healthPoints / baseStats.GetStat(Stats.Stats.Health);
+            return 100.0f * CurrentHealth / baseStats.GetStat(Stats.Stats.Health);
+        }
+
+        private void UpdateHealthOnLevelUp()
+        {
+            float oldMaxHealth = baseStats.GetStat(Stats.Stats.Health, baseStats.GetLevel() - 1);
+            float newMaxHealth = baseStats.GetStat(Stats.Stats.Health);
+
+            // Gain the extra health from leveling up
+            CurrentHealth = Mathf.Min(CurrentHealth + (newMaxHealth - oldMaxHealth), newMaxHealth);
         }
     }
 }
