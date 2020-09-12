@@ -1,4 +1,5 @@
-﻿using RPG.Saving;
+﻿using System;
+using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -6,6 +7,8 @@ namespace RPG.Stats
     public class Experience : MonoBehaviour, ISaveable
     {
         [SerializeField] int experiencePoints = 0;
+
+        public event Action OnExperienceGained;
 
         public int GetExperience()
         {
@@ -15,6 +18,7 @@ namespace RPG.Stats
         public void GainExperience(int experience)
         {
             experiencePoints += experience;
+            OnExperienceGained();
         }
 
         public object CaptureState()

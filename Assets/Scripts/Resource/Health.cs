@@ -12,17 +12,20 @@ namespace RPG.Resource
     public class Health : MonoBehaviour, ISaveable
     {
         [SerializeField]
-        float healthPoints = 100.0f;
+        float healthPoints = -1.0f;
 
         BaseStats baseStats = null;
 
         public float CurrentHealth { get => healthPoints; }
         public bool isDead { get => healthPoints <= 0.0f; }
 
-        private void Awake()
+        private void Start()
         {
             baseStats = GetComponent<BaseStats>();
-            healthPoints = baseStats.GetStat(Stats.Stats.Health);
+            if (healthPoints < -1.0f)
+            {
+                healthPoints = baseStats.GetStat(Stats.Stats.Health);
+            }
         }
 
         public void TakeDamage(GameObject instigator, float damage)
@@ -47,13 +50,9 @@ namespace RPG.Resource
         private void AwardExperience(GameObject instigator)
         {
             Experience experience = instigator.GetComponent<Experience>();
-            if (experience)
+            if (experience && instigator.CompareTag("Player"))
             {
                 experience.GainExperience((int)baseStats.GetStat(Stats.Stats.ExperienceReward));
-                if (instigator.CompareTag("Player"))
-                {
-                    instigator.GetComponent<BaseStats>().GetLevel();
-                }
             }
         }
 
@@ -66,9 +65,8 @@ namespace RPG.Resource
         {
             if (state is float)
             {
-                bool wasAlreadyDead = isDead;
                 healthPoints = (float)state;
-                if (isDead && !wasAlreadyDead)
+                if (isDead)
                 {
                     Die();
                 }
