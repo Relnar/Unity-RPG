@@ -19,7 +19,8 @@ namespace RPG.Combat
         // Update is called once per frame
         void Update()
         {
-            textDisplay.text = target.GetTarget() ? String.Format("{0:0} %", target.GetTarget().GetPercentage()) : "N/A";
+            Health health = target.GetTarget();
+            textDisplay.text = health ? String.Format($"{health.CurrentHealth}/{health.MaxHealth} {health.GetPercentage():0}%") : "N/A";
         }
     }
 }

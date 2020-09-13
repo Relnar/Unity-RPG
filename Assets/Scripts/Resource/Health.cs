@@ -14,6 +14,7 @@ namespace RPG.Resource
         BaseStats baseStats = null;
 
         public float CurrentHealth { get; private set; } = -1.0f;
+        public float MaxHealth { get; private set; }
         public bool isDead { get => CurrentHealth <= 0.0f; }
 
         private void Start()
@@ -23,6 +24,7 @@ namespace RPG.Resource
             {
                 CurrentHealth = baseStats.GetStat(Stats.Stats.Health);
             }
+            MaxHealth = baseStats.GetStat(Stats.Stats.Health);
             baseStats.OnLevelUp += UpdateHealthOnLevelUp;
         }
 
@@ -78,11 +80,11 @@ namespace RPG.Resource
 
         private void UpdateHealthOnLevelUp()
         {
-            float oldMaxHealth = baseStats.GetStat(Stats.Stats.Health, baseStats.GetLevel() - 1);
             float newMaxHealth = baseStats.GetStat(Stats.Stats.Health);
 
             // Gain the extra health from leveling up
-            CurrentHealth = Mathf.Min(CurrentHealth + (newMaxHealth - oldMaxHealth), newMaxHealth);
+            CurrentHealth = Mathf.Min(CurrentHealth + (newMaxHealth - MaxHealth), newMaxHealth);
+            MaxHealth = newMaxHealth;
         }
     }
 }

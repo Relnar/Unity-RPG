@@ -2,6 +2,7 @@
 using RPG.Movement;
 using RPG.Resource;
 using RPG.Saving;
+using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -16,6 +17,7 @@ namespace RPG.Combat
         Health target;
         Health health;
         Mover mover;
+        BaseStats baseStats;
         float timeSinceLastAttack = 100.0f;
         Weapon currentWeapon = null;
 
@@ -24,6 +26,7 @@ namespace RPG.Combat
         {
             mover = GetComponent<Mover>();
             health = GetComponent<Health>();
+            baseStats = GetComponent<BaseStats>();
 
             if (currentWeapon == null)
             {
@@ -127,13 +130,14 @@ namespace RPG.Combat
         {
             if (target && !target.isDead && currentWeapon)
             {
+                float damage = baseStats.GetStat(Stats.Stats.Damage);
                 if (currentWeapon.HasProjectile())
                 {
-                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, GetComponent<CapsuleCollider>());
+                    currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, GetComponent<CapsuleCollider>(), damage);
                 }
                 else
                 {
-                    target.TakeDamage(gameObject, currentWeapon.GetDamage());
+                    target.TakeDamage(gameObject, damage);
                 }
 
                 if (target.isDead)

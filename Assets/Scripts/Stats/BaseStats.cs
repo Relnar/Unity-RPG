@@ -47,12 +47,12 @@ namespace RPG.Stats
 
         public float GetStat(Stats stat, int level)
         {
-            return progression ? progression.GetStat(stat, characterClass, startingLevel) : 0.0f;
+            return progression ? progression.GetStat(stat, characterClass, level) : 0.0f;
         }
 
         public float GetStat(Stats stat)
         {
-            return GetStat(stat, startingLevel);
+            return GetStat(stat, currentLevel);
         }
 
         public int GetLevel()
@@ -68,7 +68,7 @@ namespace RPG.Stats
         {
             if (currentLevel < 1)
             {
-                currentLevel = 1;
+                currentLevel = startingLevel;
             }
             else if (experience && progression)
             {
@@ -76,7 +76,7 @@ namespace RPG.Stats
                 var xpToLevelUp = GetStat(Stats.XPtoLevelUp);
                 if (currentXP >= xpToLevelUp && currentLevel < 99)
                 {
-                    currentLevel++;
+                    return currentLevel + 1;
                 }
             }
 

@@ -94,7 +94,7 @@ namespace RPG.Combat
             return null;
         }
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, CapsuleCollider capsuleCollider)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, CapsuleCollider capsuleCollider, float calculatedDamage)
         {
             if (projectile)
             {
@@ -104,7 +104,7 @@ namespace RPG.Combat
                     Projectile projectileInstance = Instantiate(projectile,
                                                                 handTransform.position,
                                                                 Quaternion.identity);
-                    projectileInstance.SetTarget(target, instigator, weaponDamage, capsuleCollider);
+                    projectileInstance.SetTarget(target, instigator, calculatedDamage, capsuleCollider);
                 }
             }
         }
