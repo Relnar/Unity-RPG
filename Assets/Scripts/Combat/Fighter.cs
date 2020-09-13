@@ -1,4 +1,5 @@
-﻿using RPG.Core;
+﻿using System.Collections.Generic;
+using RPG.Core;
 using RPG.Movement;
 using RPG.Resource;
 using RPG.Saving;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction, ISaveable
+    public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider
     {
         [SerializeField] float timeBetweenAttacks = 1.0f;
         [SerializeField] Transform rightHandTransform = null;
@@ -98,6 +99,14 @@ namespace RPG.Combat
             }
             GetComponent<Mover>().Cancel();
             target = null;
+        }
+
+        public IEnumerable<float> GetAdditiveModifer(Stats.Stats stat)
+        {
+            if (stat == Stats.Stats.Damage)
+            {
+                yield return currentWeapon.GetDamage();
+            }
         }
 
         void AttackBehavior()

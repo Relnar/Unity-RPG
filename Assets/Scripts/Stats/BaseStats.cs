@@ -13,6 +13,7 @@ namespace RPG.Stats
 
         Experience experience;
         int currentLevel = 0;
+        IModifierProvider[] modifierProviders;
 
         public event Action OnLevelUp;
 
@@ -25,6 +26,8 @@ namespace RPG.Stats
                 experience.OnExperienceGained += UpdateLevel;
             }
             this.OnLevelUp += LevelUpEffect;
+
+            modifierProviders = GetComponents<IModifierProvider>();
         }
 
         private void UpdateLevel()
@@ -47,7 +50,7 @@ namespace RPG.Stats
 
         public float GetStat(Stats stat, int level)
         {
-            return progression ? progression.GetStat(stat, characterClass, level) : 0.0f;
+            return progression ? (progression.GetStat(stat, characterClass, level) + GetAdaptiveModifier(stat)) : 0.0f;
         }
 
         public float GetStat(Stats stat)
@@ -81,6 +84,19 @@ namespace RPG.Stats
             }
 
             return currentLevel;
+        }
+
+        private float GetAdaptiveModifier(Stats stat)
+        {
+            float totalModifier = 0.0f;
+            foreach (IModifierProvider provider in modifierProviders)
+            {
+                foreach (float value in provider.GetAdditiveModifer(stat))
+                {
+                    totalModifier += value;
+                }
+            }
+            return totalModifier;
         }
     }
 }
