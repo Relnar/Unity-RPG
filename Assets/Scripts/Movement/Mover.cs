@@ -15,8 +15,7 @@ namespace RPG.Movement
         NavMeshAgent navMeshAgent;
         Health health;
 
-        // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             health = GetComponent<Health>();
@@ -77,13 +76,13 @@ namespace RPG.Movement
         {
             if (state is Dictionary<string, object>)
             {
-                GetComponent<NavMeshAgent>().enabled = false;
+                navMeshAgent.enabled = false;
 
                 Dictionary<string, object> data = (Dictionary<string, object>)state;
                 transform.position = ((SerializableVector3)data["position"]).ToVector();
                 transform.eulerAngles = ((SerializableVector3)data["rotation"]).ToVector();
 
-                GetComponent<NavMeshAgent>().enabled = true;
+                navMeshAgent.enabled = true;
             }
         }
     }
