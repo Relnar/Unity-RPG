@@ -28,7 +28,7 @@ namespace RPG.Combat
         float damage = 0.0f;
         BoxCollider projectileCollider = null;
 
-        private void Start()
+        private void Awake()
         {
             projectileCollider = GetComponent<BoxCollider>();
         }

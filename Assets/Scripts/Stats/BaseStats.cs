@@ -18,17 +18,35 @@ namespace RPG.Stats
 
         public event Action OnLevelUp;
 
-        private void Start()
+        private void Awake()
         {
             experience = GetComponent<Experience>();
+            modifierProviders = GetComponents<IModifierProvider>();
+        }
+
+        private void Start()
+        {
             currentLevel = CalculateLevel();
+        }
+
+        private void OnEnable()
+        {
+            // Callbacks should be registered in OnEnabled
             if (experience)
             {
                 experience.OnExperienceGained += UpdateLevel;
             }
             this.OnLevelUp += LevelUpEffect;
+        }
 
-            modifierProviders = GetComponents<IModifierProvider>();
+        private void OnDisable()
+        {
+            // Callbacks should be unregistered in OnDisabled
+            if (experience)
+            {
+                experience.OnExperienceGained -= UpdateLevel;
+            }
+            this.OnLevelUp -= LevelUpEffect;
         }
 
         private void UpdateLevel()

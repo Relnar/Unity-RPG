@@ -22,13 +22,15 @@ namespace RPG.Combat
         float timeSinceLastAttack = 100.0f;
         Weapon currentWeapon = null;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
             mover = GetComponent<Mover>();
             health = GetComponent<Health>();
             baseStats = GetComponent<BaseStats>();
+        }
 
+        void Start()
+        {
             if (currentWeapon == null)
             {
                 EquipWeapon(defaultWeapon);

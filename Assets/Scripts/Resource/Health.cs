@@ -17,15 +17,29 @@ namespace RPG.Resource
         public float MaxHealth { get; private set; }
         public bool isDead { get => CurrentHealth <= 0.0f; }
 
-        private void Start()
+        private void Awake()
         {
             baseStats = GetComponent<BaseStats>();
+        }
+
+        private void Start()
+        {
             if (CurrentHealth < 0.0f)
             {
                 CurrentHealth = baseStats.GetStat(Stats.Stats.Health);
             }
             MaxHealth = baseStats.GetStat(Stats.Stats.Health);
+        }
+
+        private void OnEnable()
+        {
             baseStats.OnLevelUp += UpdateHealthOnLevelUp;
+            
+        }
+
+        private void OnDisable()
+        {
+            baseStats.OnLevelUp -= UpdateHealthOnLevelUp;
         }
 
         public void TakeDamage(GameObject instigator, float damage)
