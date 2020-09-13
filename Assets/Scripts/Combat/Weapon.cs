@@ -6,23 +6,19 @@ namespace RPG.Combat
     [CreateAssetMenu(fileName = "Weapon", menuName = "Weapon/Make New Weapon", order = 0)]
     public class Weapon : ScriptableObject
     {
-        [SerializeField]
-        AnimatorOverrideController animatorOverride = null;
-        [SerializeField]
-        GameObject equippedPrefab = null;
-        [SerializeField]
-        float weaponRange = 2.0f;
-        [SerializeField]
-        float weaponDamage = 5.0f;
-        [SerializeField]
-        bool isRightHanded = true;
-        [SerializeField]
-        Projectile projectile = null;
+        [SerializeField] AnimatorOverrideController animatorOverride = null;
+        [SerializeField] GameObject equippedPrefab = null;
+        [SerializeField] float weaponRange = 2.0f;
+        [SerializeField] float weaponDamage = 5.0f;
+        [SerializeField] float percentageBonus = 0.0f;
+        [SerializeField] bool isRightHanded = true;
+        [SerializeField] Projectile projectile = null;
 
         const string weaponName = "Weapon";
 
         public float GetRange() { return weaponRange; }
         public float GetDamage() { return weaponDamage; }
+        public float GetPercentageBonus() { return percentageBonus; }
         public bool HasProjectile() { return projectile != null; }
 
         public void Spawn(Transform rightHand, Transform leftHand, Animator animator)

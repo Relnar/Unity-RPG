@@ -51,6 +51,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6459555296645892070, guid: 59dc66c3745b0441781dfe6f9a08ba30,
         type: 3}
+    - target: {fileID: 464197169864911197, guid: f3e1164c6a4d24a24b3d6afd302ce181,
+        type: 3}
+      propertyPath: shouldUseModifiers
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3386300996182146836, guid: f3e1164c6a4d24a24b3d6afd302ce181,
         type: 3}
       propertyPath: m_IsKinematic

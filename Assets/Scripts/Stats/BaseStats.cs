@@ -10,6 +10,7 @@ namespace RPG.Stats
         [SerializeField] CharacterClass characterClass = CharacterClass.Grunt;
         [SerializeField] Progression progression = null;
         [SerializeField] GameObject levelUpEffect = null;
+        [SerializeField] bool shouldUseModifiers = false;
 
         Experience experience;
         int currentLevel = 0;
@@ -50,7 +51,7 @@ namespace RPG.Stats
 
         public float GetStat(Stats stat, int level)
         {
-            return progression ? (progression.GetStat(stat, characterClass, level) + GetAdaptiveModifier(stat)) : 0.0f;
+            return ApplyModifiers(stat, GetBaseStat(stat, level));
         }
 
         public float GetStat(Stats stat)
@@ -86,17 +87,31 @@ namespace RPG.Stats
             return currentLevel;
         }
 
-        private float GetAdaptiveModifier(Stats stat)
+        private float GetBaseStat(Stats stat, int level)
         {
-            float totalModifier = 0.0f;
-            foreach (IModifierProvider provider in modifierProviders)
+            return progression.GetStat(stat, characterClass, level);
+        }
+
+        private float ApplyModifiers(Stats stat, float baseStat)
+        {
+            if (shouldUseModifiers)
             {
-                foreach (float value in provider.GetAdditiveModifer(stat))
+                float additiveModifier = 0.0f;
+                float percentageModifier = 0.0f;
+                foreach (IModifierProvider provider in modifierProviders)
                 {
-                    totalModifier += value;
+                    foreach (float value in provider.GetAdditiveModifers(stat))
+                    {
+                        additiveModifier += value;
+                    }
+                    foreach (float value in provider.GetPercentageModifers(stat))
+                    {
+                        percentageModifier += value;
+                    }
                 }
+                return (baseStat + additiveModifier) * (1.0f + percentageModifier * 0.01f);
             }
-            return totalModifier;
+            return baseStat;
         }
     }
 }

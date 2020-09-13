@@ -101,11 +101,19 @@ namespace RPG.Combat
             target = null;
         }
 
-        public IEnumerable<float> GetAdditiveModifer(Stats.Stats stat)
+        public IEnumerable<float> GetAdditiveModifers(Stats.Stats stat)
         {
             if (stat == Stats.Stats.Damage)
             {
                 yield return currentWeapon.GetDamage();
+            }
+        }
+
+        public IEnumerable<float> GetPercentageModifers(Stats.Stats stat)
+        {
+            if (stat == Stats.Stats.Damage)
+            {
+                yield return currentWeapon.GetPercentageBonus();
             }
         }
 
