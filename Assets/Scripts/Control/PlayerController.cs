@@ -4,6 +4,7 @@ using RPG.Movement;
 using RPG.Resource;
 using RPG.Utils;
 using System;
+using UnityEngine.EventSystems;
 
 namespace RPG.Control
 {
@@ -15,7 +16,8 @@ namespace RPG.Control
         {
             None,
             Movement,
-            Combat
+            Combat,
+            UI
         }
 
         [System.Serializable]
@@ -32,13 +34,27 @@ namespace RPG.Control
         void Awake()
         {
             health = GetComponent<Health>();
+            for (int i = 0; i < cursorMappings.Length; ++i)
+            {
+                if (cursorMappings[i].texture && cursorMappings[i].hotspot == Vector2.zero)
+                {
+                    cursorMappings[i].hotspot = new Vector2(cursorMappings[i].texture.width / 2,
+                                                            cursorMappings[i].texture.height / 2);
+                }
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (InteractWithUI())
+            {
+                return;
+            }
+
             if (health.isDead)
             {
+                SetCursor(CursorType.None);
                 return;
             }
 
@@ -54,6 +70,16 @@ namespace RPG.Control
                 return;
             }
             SetCursor(CursorType.None);
+        }
+
+        bool InteractWithUI()
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                SetCursor(CursorType.UI);
+                return true;
+            }
+            return false;
         }
 
         bool InteractWithCombat(Ray ray)
@@ -90,6 +116,7 @@ namespace RPG.Control
                 {
                     mover.StartMoveAction(hit.point, 1.0f);
                 }
+                SetCursor(CursorType.Movement);
                 return true;
             }
 
