@@ -1,4 +1,5 @@
 ﻿using System;
+using GameDevTV.Utils;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -13,20 +14,22 @@ namespace RPG.Stats
         [SerializeField] bool shouldUseModifiers = false;
 
         Experience experience;
-        int currentLevel = 0;
+        LazyValue<int> currentLevel;
+        int CurrentLevel { get => currentLevel.value; set => currentLevel.value = value; }
         IModifierProvider[] modifierProviders;
 
         public event Action OnLevelUp;
 
         private void Awake()
         {
+            currentLevel = new LazyValue<int>(CalculateLevel);
             experience = GetComponent<Experience>();
             modifierProviders = GetComponents<IModifierProvider>();
         }
 
         private void Start()
         {
-            currentLevel = CalculateLevel();
+            currentLevel.ForceInit();
         }
 
         private void OnEnable()
@@ -52,9 +55,9 @@ namespace RPG.Stats
         private void UpdateLevel()
         {
             int newLevel = CalculateLevel();
-            if (newLevel > currentLevel)
+            if (newLevel > CurrentLevel)
             {
-                currentLevel = newLevel;
+                CurrentLevel = newLevel;
                 OnLevelUp();
             }
         }
@@ -74,35 +77,46 @@ namespace RPG.Stats
 
         public float GetStat(Stats stat)
         {
-            return GetStat(stat, currentLevel);
+            return GetStat(stat, CurrentLevel);
         }
 
         public int GetLevel()
         {
-            if (currentLevel < 1)
-            {
-                currentLevel = CalculateLevel();
-            }
-            return currentLevel;
+            return CurrentLevel;
         }
 
         public int CalculateLevel()
         {
-            if (currentLevel < 1)
+            if (experience == null)
             {
-                currentLevel = startingLevel;
+                return startingLevel;
             }
             else if (experience && progression)
             {
                 var currentXP = experience.GetExperience();
-                var xpToLevelUp = GetStat(Stats.XPtoLevelUp);
-                if (currentXP >= xpToLevelUp && currentLevel < 99)
+                if (!currentLevel.IsInitialized())
                 {
-                    return currentLevel + 1;
+                    int level = 1;
+                    for ( ; level < 99; ++level)
+                    {
+                        var xpToLevelUp = GetStat(Stats.XPtoLevelUp, level);
+                        if (currentXP < xpToLevelUp)
+                        {
+                            return level;
+                        }
+                    }
+                }
+                else
+                {
+                    var xpToLevelUp = GetStat(Stats.XPtoLevelUp);
+                    if (currentXP >= xpToLevelUp && CurrentLevel < 99)
+                    {
+                        return CurrentLevel + 1;
+                    }
                 }
             }
 
-            return currentLevel;
+            return CurrentLevel;
         }
 
         private float GetBaseStat(Stats stat, int level)

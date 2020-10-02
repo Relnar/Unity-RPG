@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameDevTV.Utils;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
@@ -13,28 +14,37 @@ namespace RPG.Resource
     {
         BaseStats baseStats = null;
 
-        public float CurrentHealth { get; private set; } = -1.0f;
+        LazyValue<float> healthPoints;
+        public float CurrentHealth
+        {
+            get
+            {
+                return healthPoints.value;
+            }
+            private set
+            {
+                healthPoints.value = value;
+            }
+        }
+
         public float MaxHealth { get; private set; }
         public bool isDead { get => CurrentHealth <= 0.0f; }
 
         private void Awake()
         {
+            healthPoints = new LazyValue<float>(GetInitialHealth);
             baseStats = GetComponent<BaseStats>();
         }
 
         private void Start()
         {
-            if (CurrentHealth < 0.0f)
-            {
-                CurrentHealth = baseStats.GetStat(Stats.Stats.Health);
-            }
+            healthPoints.ForceInit();
             MaxHealth = baseStats.GetStat(Stats.Stats.Health);
         }
 
         private void OnEnable()
         {
             baseStats.OnLevelUp += UpdateHealthOnLevelUp;
-            
         }
 
         private void OnDisable()
@@ -99,6 +109,11 @@ namespace RPG.Resource
             // Gain the extra health from leveling up
             CurrentHealth = Mathf.Min(CurrentHealth + (newMaxHealth - MaxHealth), newMaxHealth);
             MaxHealth = newMaxHealth;
+        }
+
+        private float GetInitialHealth()
+        {
+            return baseStats.GetStat(Stats.Stats.Health);
         }
     }
 }
