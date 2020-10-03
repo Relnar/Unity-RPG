@@ -26,6 +26,7 @@ namespace RPG.Control
         [SerializeField] CursorMapping[] cursorMappings = new CursorMapping[Enum.GetValues(typeof(CursorType)).Length];
 
         [SerializeField] float maxNavMeshProjectionDistance = 1.0f;
+        [SerializeField] float maxNavPathLength = 40.0f;
 
         // Start is called before the first frame update
         void Awake()
@@ -73,7 +74,8 @@ namespace RPG.Control
 
         bool InteractWithUI()
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current &&
+                EventSystem.current.IsPointerOverGameObject())
             {
                 SetCursor(CursorType.UI);
                 return true;
@@ -161,10 +163,30 @@ namespace RPG.Control
                                            NavMesh.AllAreas))
                 {
                     target = navMeshHit.position;
-                    return true;
+
+                    NavMeshPath path = new NavMeshPath();
+                    if (NavMesh.CalculatePath(transform.position, navMeshHit.position, NavMesh.AllAreas, path) &&
+                        path.status == NavMeshPathStatus.PathComplete &&
+                        GetPathLength(path) <= maxNavPathLength)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
+        }
+
+        private float GetPathLength(NavMeshPath path)
+        {
+            float totalLength = 0.0f;
+            if (path.corners.Length > 1)
+            {
+                for (int i = 0; i < path.corners.Length - 1; ++i)
+                {
+                    totalLength += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+                }
+            }
+            return totalLength;
         }
     }
 }
