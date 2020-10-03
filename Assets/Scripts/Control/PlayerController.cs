@@ -11,6 +11,7 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
         Health health;
+        Fighter fighter;
 
         enum CursorType
         {
@@ -34,6 +35,7 @@ namespace RPG.Control
         void Awake()
         {
             health = GetComponent<Health>();
+            fighter = GetComponent<Fighter>();
             for (int i = 0; i < cursorMappings.Length; ++i)
             {
                 if (cursorMappings[i].texture && cursorMappings[i].hotspot == Vector2.zero)
@@ -60,12 +62,12 @@ namespace RPG.Control
 
             Ray ray = GetMouseRay();
 
-            if (InteractWithCombat((Ray)ray))
+            if (InteractWithComponent(ray))
             {
                 return;
             }
 
-            if (InteractWithMovement((Ray)ray))
+            if (InteractWithMovement(ray))
             {
                 return;
             }
@@ -82,26 +84,22 @@ namespace RPG.Control
             return false;
         }
 
-        bool InteractWithCombat(Ray ray)
+        private bool InteractWithComponent(Ray ray)
         {
             // Raycast all to hit all possible targets in the ray
             var hits = Physics.RaycastAll(ray);
             foreach (var hit in hits)
             {
-                if (hit.transform.TryGetComponent(out CombatTarget combatTarget) &&
-                    TryGetComponent(out Fighter fighter) &&
-                    fighter.CanAttack(combatTarget.gameObject))
+                IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
+                foreach (IRaycastable raycastable in raycastables)
                 {
-                    // Mouse button click only
-                    if (Input.GetMouseButtonDown(0))
+                    if (raycastable.HandleRaycast(this))
                     {
-                        fighter.Attack(combatTarget.gameObject);
+                        SetCursor(CursorType.Combat);
+                        return true;
                     }
-                    SetCursor(CursorType.Combat);
-                    return true;
                 }
             }
-
             return false;
         }
 
