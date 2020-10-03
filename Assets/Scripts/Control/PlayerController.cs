@@ -5,6 +5,7 @@ using RPG.Resource;
 using RPG.Utils;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.AI;
 
 namespace RPG.Control
 {
@@ -12,6 +13,7 @@ namespace RPG.Control
     {
         Health health;
         Fighter fighter;
+        Mover mover;
 
         [System.Serializable]
         struct CursorMapping
@@ -23,11 +25,14 @@ namespace RPG.Control
         [EnumNamedArray(typeof(CursorType))]
         [SerializeField] CursorMapping[] cursorMappings = new CursorMapping[Enum.GetValues(typeof(CursorType)).Length];
 
+        [SerializeField] float maxNavMeshProjectionDistance = 1.0f;
+
         // Start is called before the first frame update
         void Awake()
         {
             health = GetComponent<Health>();
             fighter = GetComponent<Fighter>();
+            mover = GetComponent<Mover>();
             for (int i = 0; i < cursorMappings.Length; ++i)
             {
                 if (cursorMappings[i].texture && cursorMappings[i].hotspot == Vector2.zero)
@@ -98,13 +103,13 @@ namespace RPG.Control
         bool InteractWithMovement(Ray ray)
         {
             // Raycast to hit the first target
-            if (Physics.Raycast(ray, out RaycastHit hit) &&
-                TryGetComponent(out Mover mover))
+            Vector3 target;
+            if (RaycastNavMesh(ray, out target))
             {
                 // Mouse button can be held continously
                 if (Input.GetMouseButton(0))
                 {
-                    mover.StartMoveAction(hit.point, 1.0f);
+                    mover.StartMoveAction(target, 1.0f);
                 }
                 SetCursor(CursorType.Movement);
                 return true;
@@ -140,6 +145,26 @@ namespace RPG.Control
         CursorMapping GetCursorMapping(CursorType type)
         {
             return cursorMappings[(int)type];
+        }
+
+        bool RaycastNavMesh(Ray ray, out Vector3 target)
+        {
+            // Raycast to terrain
+            target = new Vector3();
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // Find the nearest position on the navmesh
+                NavMeshHit navMeshHit;
+                if (NavMesh.SamplePosition(hit.point,
+                                           out navMeshHit,
+                                           maxNavMeshProjectionDistance,
+                                           NavMesh.AllAreas))
+                {
+                    target = navMeshHit.position;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
