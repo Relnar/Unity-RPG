@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace RPG.Attributes
 {
@@ -9,12 +6,20 @@ namespace RPG.Attributes
     {
         [SerializeField] Health healthComponent = null;
         [SerializeField] RectTransform foreground = null;
+        [SerializeField] Canvas rootCanvas;
 
         void Update()
         {
-            if (foreground && healthComponent)
+            float scale = healthComponent.CurrentHealth / healthComponent.MaxHealth;
+            if (rootCanvas &&
+                (Mathf.Approximately(scale, 0.0f) ||
+                 Mathf.Approximately(scale, 1.0f)))
             {
-                float scale = healthComponent.CurrentHealth / healthComponent.MaxHealth;
+                rootCanvas.enabled = false;
+            }
+            else if (foreground && healthComponent)
+            {
+                rootCanvas.enabled = true;
                 foreground.localScale = new Vector3(scale, 1.0f, 1.0f);
             }
         }
