@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using GameDevTV.Utils;
 using RPG.Core;
 using RPG.Saving;
@@ -14,7 +12,10 @@ namespace RPG.Resource
     {
         BaseStats baseStats = null;
 
-        [SerializeField] UnityEvent takeDamage;
+        [Serializable]
+        public class TakeDamageEvent : UnityEvent<float>
+        {}
+        [SerializeField] TakeDamageEvent takeDamage;
 
         LazyValue<float> healthPoints;
         public float CurrentHealth
@@ -66,7 +67,7 @@ namespace RPG.Resource
                 }
                 else
                 {
-                    takeDamage.Invoke();
+                    takeDamage.Invoke(damage);
                 }
             }
         }
