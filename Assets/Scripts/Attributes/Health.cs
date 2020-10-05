@@ -6,7 +6,7 @@ using RPG.Stats;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace RPG.Resource
+namespace RPG.Attributes
 {
     public class Health : MonoBehaviour, ISaveable
     {
