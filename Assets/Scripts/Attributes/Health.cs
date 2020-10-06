@@ -13,9 +13,11 @@ namespace RPG.Attributes
         BaseStats baseStats = null;
 
         [Serializable]
+        // Need to subclass the UnityEvent when we want to pass an argument
         public class TakeDamageEvent : UnityEvent<float>
         {}
         [SerializeField] TakeDamageEvent takeDamage;
+        [SerializeField] UnityEvent onDie;
 
         LazyValue<float> healthPoints;
         public float CurrentHealth
@@ -62,6 +64,7 @@ namespace RPG.Attributes
                 CurrentHealth = Mathf.Max(CurrentHealth - damage, 0.0f);
                 if (isDead)
                 {
+                    onDie.Invoke();
                     Die();
                     AwardExperience(instigator);
                 }
