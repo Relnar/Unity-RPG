@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using RPG.Control;
 using UnityEngine;
 using UnityEngine.AI;
@@ -71,6 +69,10 @@ namespace RPG.SceneManagement
         {
             DontDestroyOnLoad(gameObject);
 
+            // Player from the previous scene
+            PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            player.enabled = false;
+
             // Start fading out the new scene
             yield return fader.FadeOut(fadeOutTime);
 
@@ -79,6 +81,10 @@ namespace RPG.SceneManagement
 
             // Load asynchronously the new scene
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+
+            // Player from the new scene
+            PlayerController newPlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            newPlayer.enabled = false;
 
             savingWrapper.Load();
 
@@ -92,7 +98,10 @@ namespace RPG.SceneManagement
             yield return new WaitForSeconds(fadeWaitTime);
 
             // Start fading in the new scene
-            yield return fader.FadeIn(fadeInTime);
+            fader.FadeIn(fadeInTime);
+
+            // Restore control to the new player
+            newPlayer.enabled = true;
 
             // Destroy the portal
             Destroy(gameObject);
