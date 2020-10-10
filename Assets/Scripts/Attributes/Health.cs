@@ -75,6 +75,14 @@ namespace RPG.Attributes
             }
         }
 
+        public void Heal(float amount)
+        {
+            if (amount > 0.0f)
+            {
+                CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
+            }
+        }
+
         void Die()
         {
             GetComponent<Animator>().SetTrigger("die");
