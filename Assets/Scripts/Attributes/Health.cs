@@ -16,8 +16,8 @@ namespace RPG.Attributes
         // Need to subclass the UnityEvent when we want to pass an argument
         public class TakeDamageEvent : UnityEvent<float>
         {}
-        [SerializeField] TakeDamageEvent takeDamage;
-        [SerializeField] UnityEvent onDie;
+        [SerializeField] TakeDamageEvent takeDamage = null;
+        [SerializeField] UnityEvent onDie = null;
 
         LazyValue<float> healthPoints;
         public float CurrentHealth

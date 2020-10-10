@@ -6,7 +6,7 @@ namespace RPG.Attributes
     {
         [SerializeField] Health healthComponent = null;
         [SerializeField] RectTransform foreground = null;
-        [SerializeField] Canvas rootCanvas;
+        [SerializeField] Canvas rootCanvas = null;
 
         void Update()
         {

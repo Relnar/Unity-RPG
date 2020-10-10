@@ -21,16 +21,17 @@ namespace RPG.Combat
         public float GetPercentageBonus() { return percentageBonus; }
         public bool HasProjectile() { return projectile != null; }
 
-        public void Spawn(Transform rightHand, Transform leftHand, Animator animator)
+        public Weapon Spawn(Transform rightHand, Transform leftHand, Animator animator)
         {
             DestroyOldWeapon(rightHand, leftHand);
 
+            Weapon weapon = null;
             if (equippedPrefab)
             {
                 Transform handTransform = GetTransform(rightHand, leftHand);
                 if (handTransform)
                 {
-                    Weapon weapon = Instantiate(equippedPrefab, handTransform);
+                    weapon = Instantiate(equippedPrefab, handTransform);
                     weapon.gameObject.name = weaponName;
                 }
             }
@@ -49,6 +50,7 @@ namespace RPG.Combat
                     }
                 }
             }
+            return weapon;
         }
 
         private void DestroyOldWeapon(Transform rightHand, Transform leftHand)
