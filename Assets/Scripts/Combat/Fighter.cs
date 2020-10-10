@@ -14,22 +14,22 @@ namespace RPG.Combat
         [SerializeField] float timeBetweenAttacks = 1.0f;
         [SerializeField] Transform rightHandTransform = null;
         [SerializeField] Transform leftHandTransform = null;
-        [SerializeField] Weapon defaultWeapon = null;
+        [SerializeField] WeaponConfig defaultWeapon = null;
  
         Health target;
         Health health;
         Mover mover;
         BaseStats baseStats;
         float timeSinceLastAttack = 100.0f;
-        LazyValue<Weapon> currentWeapon;
-        Weapon CurrentWeapon { get => currentWeapon.value; set => currentWeapon.value = value; }
+        LazyValue<WeaponConfig> currentWeapon;
+        WeaponConfig CurrentWeapon { get => currentWeapon.value; set => currentWeapon.value = value; }
 
         private void Awake()
         {
             mover = GetComponent<Mover>();
             health = GetComponent<Health>();
             baseStats = GetComponent<BaseStats>();
-            currentWeapon = new LazyValue<Weapon>(SetupDefaultWeapon);
+            currentWeapon = new LazyValue<WeaponConfig>(SetupDefaultWeapon);
         }
 
         void Start()
@@ -78,7 +78,7 @@ namespace RPG.Combat
             return false;
         }
 
-        public void EquipWeapon(Weapon weapon)
+        public void EquipWeapon(WeaponConfig weapon)
         {
             if (weapon && weapon != CurrentWeapon && rightHandTransform)
             {
@@ -87,7 +87,7 @@ namespace RPG.Combat
             CurrentWeapon = weapon;
         }
 
-        void AttachWeapon(Weapon weapon)
+        void AttachWeapon(WeaponConfig weapon)
         {
             weapon.Spawn(rightHandTransform, leftHandTransform, GetComponent<Animator>());
         }
@@ -184,14 +184,14 @@ namespace RPG.Combat
 
         public void RestoreState(object state)
         {
-            Weapon weapon = UnityEngine.Resources.Load<Weapon>(state as string);
+            WeaponConfig weapon = UnityEngine.Resources.Load<WeaponConfig>(state as string);
             if (weapon)
             {
                 EquipWeapon(weapon);
             }
         }
 
-        Weapon SetupDefaultWeapon()
+        WeaponConfig SetupDefaultWeapon()
         {
             AttachWeapon(defaultWeapon);
             return defaultWeapon;
